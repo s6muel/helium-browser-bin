@@ -1,0 +1,19 @@
+pkgbase = helium-browser-bin
+	pkgdesc = Helium Browser (Chromium fork with privacy features)
+	pkgver = 0.4.5.1
+	pkgrel = 1
+	url = https://github.com/imputnet/helium-linux
+	arch = x86_64
+	license = GPL3
+	depends = zlib
+	depends = glibc
+	depends = fuse2
+	depends = hicolor-icon-theme
+	noextract = helium-0.4.5.1-x86_64.AppImage
+	options = !strip
+	source_x86_64 = helium-0.4.5.1-x86_64.AppImage::https://github.com/imputnet/helium-linux/releases/download/0.4.5.1/helium-0.4.5.1-x86_64.AppImage
+	source_x86_64 = https://raw.githubusercontent.com/imputnet/helium-linux/main/LICENSE
+	sha256sums_x86_64 = 10f09a3630b5a34d10be2eba0a970adcf4927e97ae1175b1a3cac1ca9d59d183
+	sha256sums_x86_64 = a0279a9937ce228eb71ea2a0252d0830458708570fee3df516fa4bd4c8a134bc
+
+pkgname = helium-browser-bin
