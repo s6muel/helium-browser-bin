@@ -3,8 +3,8 @@
 _pkgname="helium"
 pkgname="${_pkgname}-browser-bin"
 _binaryname="helium-browser"
-pkgver=0.4.5.1
-pkgrel=3
+pkgver=0.4.6.1
+pkgrel=4
 pkgdesc="Private, fast, and honest web browser based on Chromium"
 arch=('x86_64')
 url="https://github.com/imputnet/helium-linux"
@@ -19,8 +19,8 @@ source_x86_64=(
   "https://raw.githubusercontent.com/imputnet/helium-linux/main/LICENSE"
 )
 noextract=("${_appimage}")
-sha256sums_x86_64=('10f09a3630b5a34d10be2eba0a970adcf4927e97ae1175b1a3cac1ca9d59d183'
-                   '3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986')
+sha256sums_x86_64=('b725fb77c177ac3999371263f1d75d4fbe737389842de50b718bdd75e6ea81dd'
+                   '7056c04df17a4e0f0bac9f787f347c9cd892cee6323d1c89528090afd0b934a3')
 
 prepare() {
   chmod +x "${_appimage}"
@@ -39,10 +39,8 @@ build() {
 package() {
   # Install AppImage
   install -Dm755 "${srcdir}/${_appimage}" "${pkgdir}/opt/${pkgname}/${_pkgname}.AppImage"
-  # install -Dm755 "${_appimage}" "${pkgdir}/opt/${pkgname}/${_pkgname}.AppImage"
   
   # Install license
-  # install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
   install -Dm644 "${srcdir}/LICENSE" "${pkgdir}/opt/${pkgname}/LICENSE"
   
   # Install desktop file
@@ -57,3 +55,4 @@ package() {
   install -dm755 "${pkgdir}/usr/bin"
   ln -s "/opt/${pkgname}/${_pkgname}.AppImage" "${pkgdir}/usr/bin/${_binaryname}"
 }
+
