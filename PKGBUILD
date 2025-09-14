@@ -1,4 +1,4 @@
-# Maintainer: Sam Sinclair <sam@playleft.com>
+# Maintainer: Sam Sinclair <sam at playleft dot com>
 
 _pkgname="helium"
 pkgname="${_pkgname}-browser-bin"
