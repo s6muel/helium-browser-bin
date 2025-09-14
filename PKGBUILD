@@ -18,7 +18,7 @@ source_x86_64=(
 )
 noextract=("${_appimage}")
 sha256sums_x86_64=('10f09a3630b5a34d10be2eba0a970adcf4927e97ae1175b1a3cac1ca9d59d183'
-                   'a0279a9937ce228eb71ea2a0252d0830458708570fee3df516fa4bd4c8a134bc')
+                   '3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986')
 
 prepare() {
   chmod +x "${_appimage}"
