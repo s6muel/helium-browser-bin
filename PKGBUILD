@@ -1,58 +1,67 @@
+/*
+ * SPDX-FileCopyrightText: 2025 Arch Linux Contributors
+ *
+ * SPDX-License-Identifier: 0BSD
+ */
+
 # Maintainer: Sam Sinclair <sam at playleft dot com>
 
 _pkgname="helium"
 pkgname="${_pkgname}-browser-bin"
 _binaryname="helium-browser"
 pkgver=0.4.6.1
+_tarball="${_pkgname}-${pkgver}-x86_64_linux.tar.xz"
 pkgrel=4
 pkgdesc="Private, fast, and honest web browser based on Chromium"
 arch=('x86_64')
 url="https://github.com/imputnet/helium-linux"
-license=('GPL3')
-depends=('zlib' 'hicolor-icon-theme')
-options=(!strip)
-
-_appimage="${_pkgname}-${pkgver}-x86_64.AppImage"
+license=('GPL-3.0-only')
+options=('strip')
+depends=('gtk3' 'nss' 'alsa-lib' 'xdg-utils' 'libxss' 'libcups' 'libgcrypt'
+         'ttf-liberation' 'systemd' 'dbus' 'libpulse' 'pciutils' 'libva'
+         'libffi' 'desktop-file-utils' 'hicolor-icon-theme')
+optdepends=('pipewire: WebRTC desktop sharing under Wayland'
+            'kdialog: support for native dialogs in Plasma'
+            'gtk4: for --gtk-version=4 (GTK4 IME might work better on Wayland)'
+            'org.freedesktop.secrets: password storage backend on GNOME / Xfce'
+            'kwallet: support for storing passwords in KWallet on Plasma'
+            'upower: Battery Status API support')
 
 source_x86_64=(
-  "${_appimage}::https://github.com/imputnet/helium-linux/releases/download/${pkgver}/${_pkgname}-${pkgver}-x86_64.AppImage"
-  "https://raw.githubusercontent.com/imputnet/helium-linux/main/LICENSE"
+    "${_tarball}::https://github.com/imputnet/helium-linux/releases/download/${pkgver}/${_tarball}"
+  "helium.desktop::https://raw.githubusercontent.com/imputnet/helium-linux/main/package/helium.desktop"
 )
-noextract=("${_appimage}")
-sha256sums_x86_64=('b725fb77c177ac3999371263f1d75d4fbe737389842de50b718bdd75e6ea81dd'
-                   '7056c04df17a4e0f0bac9f787f347c9cd892cee6323d1c89528090afd0b934a3')
+sha256sums_x86_64=('1784dec2b8ef9a4c6fb7ac71ba88a8ce07db869fc2d77a21e16772c59de8259b'
+                   'e1d22a7fb8ce42d385416b9309abf293711bdc0d95d37e7ca4bbd24d2d27ba35')
 
 prepare() {
-  chmod +x "${_appimage}"
-  ./"${_appimage}" --appimage-extract
-}
-
-build() {
-  # Modify desktop file for proper integration
-  sed -i -E "s|Exec=AppRun|Exec=${_binaryname}|" "squashfs-root/${_pkgname}.desktop"
-  sed -i -E "s|Name=.*|Name=Helium Browser|" "squashfs-root/${_pkgname}.desktop"
-  
-  # Fix AppImage directory permissions
-  chmod -R a-x+rX squashfs-root/usr
+  # Fix upstream desktop file to use correct binary name and app name
+  sed -i \
+    -e 's/Exec=chromium/Exec=helium-browser/' \
+    -e 's/Name=Helium$/Name=Helium Browser/' \
+    -e 's/Icon=helium/Icon=helium-browser/' \
+    -e '/StartupNotify=/a\StartupWMClass=helium-browser' \
+    "${srcdir}/helium.desktop"
 }
 
 package() {
-  # Install AppImage
-  install -Dm755 "${srcdir}/${_appimage}" "${pkgdir}/opt/${pkgname}/${_pkgname}.AppImage"
-  
-  # Install license
-  install -Dm644 "${srcdir}/LICENSE" "${pkgdir}/opt/${pkgname}/LICENSE"
-  
-  # Install desktop file
-  install -Dm644 "squashfs-root/${_pkgname}.desktop" \
-    "${pkgdir}/usr/share/applications/${_binaryname}.desktop"
-  
-  # Install icons
-  install -dm755 "${pkgdir}/usr/share/"
-  cp -a "${srcdir}/squashfs-root/usr/share/icons" "${pkgdir}/usr/share/"
-  
-  # Create executable symlink
-  install -dm755 "${pkgdir}/usr/bin"
-  ln -s "/opt/${pkgname}/${_pkgname}.AppImage" "${pkgdir}/usr/bin/${_binaryname}"
-}
+  install -dm755 "${pkgdir}/opt/${pkgname}"
+  cp -a "${srcdir}/${_pkgname}-${pkgver}-x86_64_linux/"* "${pkgdir}/opt/${pkgname}/"
 
+  # Install proper desktop file
+  install -Dm644 "${srcdir}/helium.desktop" \
+    "${pkgdir}/usr/share/applications/${_binaryname}.desktop"
+  # Install icon for desktop file
+  install -Dm644 "${pkgdir}/opt/${pkgname}/product_logo_256.png" \
+    "${pkgdir}/usr/share/pixmaps/${_binaryname}.png"
+  install -Dm644 "${pkgdir}/opt/${pkgname}/product_logo_256.png" \
+    "${pkgdir}/usr/share/icons/hicolor/256x256/apps/${_binaryname}.png"
+
+  install -dm755 "${pkgdir}/usr/bin"
+  # Simple wrapper
+  cat > "${pkgdir}/usr/bin/${_binaryname}" << 'EOF'
+#!/bin/bash
+exec /opt/helium-browser-bin/chrome "$@"
+EOF
+  chmod 755 "${pkgdir}/usr/bin/${_binaryname}"
+}
