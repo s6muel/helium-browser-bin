@@ -1,8 +1,8 @@
-/*
- * SPDX-FileCopyrightText: 2025 Arch Linux Contributors
- *
- * SPDX-License-Identifier: 0BSD
- */
+# /*
+#  * SPDX-FileCopyrightText: 2025 Arch Linux Contributors
+#  *
+#  * SPDX-License-Identifier: 0BSD
+#  */
 
 # Maintainer: Sam Sinclair <sam at playleft dot com>
 
