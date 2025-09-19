@@ -1,11 +1,9 @@
+# Maintainer: Sam Sinclair <sam at playleft dot com>
 # /*
 #  * SPDX-FileCopyrightText: 2025 Arch Linux Contributors
 #  *
 #  * SPDX-License-Identifier: 0BSD
 #  */
-
-# Maintainer: Sam Sinclair <sam at playleft dot com>
-
 _pkgname="helium"
 pkgname="${_pkgname}-browser-bin"
 _binaryname="helium-browser"
@@ -26,14 +24,12 @@ optdepends=('pipewire: WebRTC desktop sharing under Wayland'
             'org.freedesktop.secrets: password storage backend on GNOME / Xfce'
             'kwallet: support for storing passwords in KWallet on Plasma'
             'upower: Battery Status API support')
-
 source_x86_64=(
     "${_tarball}::https://github.com/imputnet/helium-linux/releases/download/${pkgver}/${_tarball}"
   "helium.desktop::https://raw.githubusercontent.com/imputnet/helium-linux/main/package/helium.desktop"
 )
 sha256sums_x86_64=('1784dec2b8ef9a4c6fb7ac71ba88a8ce07db869fc2d77a21e16772c59de8259b'
                    'e1d22a7fb8ce42d385416b9309abf293711bdc0d95d37e7ca4bbd24d2d27ba35')
-
 prepare() {
   # Fix upstream desktop file to use correct binary name and app name
   sed -i \
@@ -43,11 +39,9 @@ prepare() {
     -e '/StartupNotify=/a\StartupWMClass=helium-browser' \
     "${srcdir}/helium.desktop"
 }
-
 package() {
   install -dm755 "${pkgdir}/opt/${pkgname}"
   cp -a "${srcdir}/${_pkgname}-${pkgver}-x86_64_linux/"* "${pkgdir}/opt/${pkgname}/"
-
   # Install proper desktop file
   install -Dm644 "${srcdir}/helium.desktop" \
     "${pkgdir}/usr/share/applications/${_binaryname}.desktop"
@@ -56,9 +50,8 @@ package() {
     "${pkgdir}/usr/share/pixmaps/${_binaryname}.png"
   install -Dm644 "${pkgdir}/opt/${pkgname}/product_logo_256.png" \
     "${pkgdir}/usr/share/icons/hicolor/256x256/apps/${_binaryname}.png"
-
+  # Install a simple simple wrapper
   install -dm755 "${pkgdir}/usr/bin"
-  # Simple wrapper
   cat > "${pkgdir}/usr/bin/${_binaryname}" << 'EOF'
 #!/bin/bash
 exec /opt/helium-browser-bin/chrome "$@"
