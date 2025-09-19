@@ -1,4 +1,5 @@
 # Maintainer: Sam Sinclair <sam at playleft dot com>
+# Contributor: Pujan Modha <pujan.pm@hotmail.com>
 # /*
 #  * SPDX-FileCopyrightText: 2025 Arch Linux Contributors
 #  *
@@ -7,9 +8,9 @@
 _pkgname="helium"
 pkgname="${_pkgname}-browser-bin"
 _binaryname="helium-browser"
-pkgver=0.4.6.1
+pkgver=0.4.7.1
 _tarball="${_pkgname}-${pkgver}-x86_64_linux.tar.xz"
-pkgrel=4
+pkgrel=1
 pkgdesc="Private, fast, and honest web browser based on Chromium"
 arch=('x86_64')
 url="https://github.com/imputnet/helium-linux"
@@ -28,10 +29,10 @@ source_x86_64=(
     "${_tarball}::https://github.com/imputnet/helium-linux/releases/download/${pkgver}/${_tarball}"
   "helium.desktop::https://raw.githubusercontent.com/imputnet/helium-linux/main/package/helium.desktop"
 )
-sha256sums_x86_64=('1784dec2b8ef9a4c6fb7ac71ba88a8ce07db869fc2d77a21e16772c59de8259b'
+sha256sums_x86_64=('1a475cacdfdc900dbaa905a476f5ae82e9d62a30af735b92c456dbc3171b44b2'
                    'e1d22a7fb8ce42d385416b9309abf293711bdc0d95d37e7ca4bbd24d2d27ba35')
 prepare() {
-  # Fix upstream desktop file to use correct binary name and app name
+  # Fix upstream desktop file to use the correct binary name and app name
   sed -i \
     -e 's/Exec=chromium/Exec=helium-browser/' \
     -e 's/Name=Helium$/Name=Helium Browser/' \
