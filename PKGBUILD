@@ -43,6 +43,9 @@ prepare() {
 package() {
   install -dm755 "${pkgdir}/opt/${pkgname}"
   cp -a "${srcdir}/${_pkgname}-${pkgver}-x86_64_linux/"* "${pkgdir}/opt/${pkgname}/"
+  # Disable user-local desktop generation in chrome-wrapper
+  sed -i 's/exists_desktop_file || generate_desktop_file/true/' \
+    "$pkgdir/opt/${pkgname}/chrome-wrapper"
   # Install proper desktop file
   install -Dm644 "${srcdir}/helium.desktop" \
     "${pkgdir}/usr/share/applications/${_binaryname}.desktop"
@@ -51,11 +54,11 @@ package() {
     "${pkgdir}/usr/share/pixmaps/${_binaryname}.png"
   install -Dm644 "${pkgdir}/opt/${pkgname}/product_logo_256.png" \
     "${pkgdir}/usr/share/icons/hicolor/256x256/apps/${_binaryname}.png"
-  # Install a simple simple wrapper
+  # Install a simple wrapper
   install -dm755 "${pkgdir}/usr/bin"
   cat > "${pkgdir}/usr/bin/${_binaryname}" << 'EOF'
 #!/bin/bash
-exec /opt/helium-browser-bin/chrome "$@"
+exec /opt/helium-browser-bin/chrome-wrapper "$@"
 EOF
   chmod 755 "${pkgdir}/usr/bin/${_binaryname}"
 }
