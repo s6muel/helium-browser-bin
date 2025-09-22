@@ -6,7 +6,7 @@
 pkgbase = helium-browser-bin
 	pkgdesc = Private, fast, and honest web browser based on Chromium
 	pkgver = 0.4.7.2
-	pkgrel = 1
+	pkgrel = 3
 	url = https://github.com/imputnet/helium-linux
 	arch = x86_64
 	license = GPL-3.0-only
@@ -34,7 +34,7 @@ pkgbase = helium-browser-bin
 	optdepends = upower: Battery Status API support
 	options = strip
 	source_x86_64 = helium-0.4.7.2-x86_64_linux.tar.xz::https://github.com/imputnet/helium-linux/releases/download/0.4.7.2/helium-0.4.7.2-x86_64_linux.tar.xz
-	source_x86_64 = helium.desktop::https://raw.githubusercontent.com/imputnet/helium-linux/main/package/helium.desktop
+	source_x86_64 = https://raw.githubusercontent.com/imputnet/helium-linux/0.4.7.2/package/helium.desktop
 	sha256sums_x86_64 = b8e1f57dffa7cf014a36b202359294654f978c9e912c380ebd2054d9ea2e4fc8
 	sha256sums_x86_64 = cce8668c18d33077a585cb5d96522e5a02ae017a2baf800f8d7214ce6d05d3d2
 

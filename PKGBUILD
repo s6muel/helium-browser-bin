@@ -10,7 +10,7 @@ pkgname="${_pkgname}-browser-bin"
 _binaryname="helium-browser"
 pkgver=0.4.7.2
 _tarball="${_pkgname}-${pkgver}-x86_64_linux.tar.xz"
-pkgrel=1
+pkgrel=3
 pkgdesc="Private, fast, and honest web browser based on Chromium"
 arch=('x86_64')
 url="https://github.com/imputnet/helium-linux"
@@ -27,7 +27,7 @@ optdepends=('pipewire: WebRTC desktop sharing under Wayland'
             'upower: Battery Status API support')
 source_x86_64=(
     "${_tarball}::https://github.com/imputnet/helium-linux/releases/download/${pkgver}/${_tarball}"
-  "helium.desktop::https://raw.githubusercontent.com/imputnet/helium-linux/main/package/helium.desktop"
+    "https://raw.githubusercontent.com/imputnet/helium-linux/${pkgver}/package/helium.desktop"
 )
 
 sha256sums_x86_64=('b8e1f57dffa7cf014a36b202359294654f978c9e912c380ebd2054d9ea2e4fc8'
