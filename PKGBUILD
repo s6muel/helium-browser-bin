@@ -8,9 +8,9 @@
 _pkgname="helium"
 pkgname="${_pkgname}-browser-bin"
 _binaryname="helium-browser"
-pkgver=0.4.12.1
+pkgver=0.5.7.1
 _tarball="${_pkgname}-${pkgver}-x86_64_linux.tar.xz"
-pkgrel=1
+pkgrel=2
 pkgdesc="Private, fast, and honest web browser based on Chromium"
 arch=('x86_64')
 url="https://github.com/imputnet/helium-linux"
@@ -30,7 +30,7 @@ source_x86_64=(
     "helium.desktop::https://raw.githubusercontent.com/imputnet/helium-linux/${pkgver}/package/helium.desktop"
 )
 
-sha256sums_x86_64=('564a081000f6aa28ff4c07dfb6281e45635703563b9c3130f41f6329f5e1f4f9'
+sha256sums_x86_64=('f6c881a8228969939f8a20c5205cfc886558bad83023abebb617408edb5ec053'
                    'cce8668c18d33077a585cb5d96522e5a02ae017a2baf800f8d7214ce6d05d3d2')
 prepare() {
   # Fix upstream desktop file to use the correct binary name and app name
@@ -58,7 +58,55 @@ package() {
   install -dm755 "${pkgdir}/usr/bin"
   cat > "${pkgdir}/usr/bin/${_binaryname}" << 'EOF'
 #!/bin/bash
-exec /opt/helium-browser-bin/chrome-wrapper "$@"
+# Fails on errors or unreadable commands
+set -euo pipefail
+
+XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-"$HOME/.config"}"
+
+SYS_CONF="/etc/helium-browser-flags.conf"
+USR_CONF="${XDG_CONFIG_HOME}/helium-browser-flags.conf"
+
+FLAGS=()
+
+append_flags_file() {
+  local file="$1"
+  [[ -r "$file" ]] || return 0
+  local line safe_line
+  # Filter comments & blank lines
+  while IFS= read -r line; do
+    [[ "$line" =~ ^[[:space:]]*(#|$) ]] && continue
+    # Sanitise: block command substitution; prevent $VAR and ~ expansion
+    case "$line" in
+      *'$('*|*'`'*)
+        echo "Warning: ignoring unsafe line in $file: $line" >&2
+        continue
+        ;;
+    esac
+    # Disable globbing during eval
+    set -f
+    # Prevent $VAR and ~ expansion while allowing eval to parse quotes & escapes
+    safe_line=${line//$/\\$}
+    safe_line=${safe_line//~/\\~}
+    eval "set -- $safe_line"
+    # Enable globbing for rest of the script
+    set +f
+    for token in "$@"; do
+      FLAGS+=("$token")
+    done
+  done < "$file"
+}
+
+append_flags_file "$SYS_CONF"
+append_flags_file "$USR_CONF"
+
+# Add environment var $HELIUM_USER_FLAGS
+if [[ -n "${HELIUM_USER_FLAGS:-}" ]]; then
+  # Split env contents on whitespace; users can quote if needed.
+  read -r -a ENV_FLAGS <<< "$HELIUM_USER_FLAGS"
+  FLAGS+=("${ENV_FLAGS[@]}")
+fi
+
+exec /opt/helium-browser-bin/chrome-wrapper "${FLAGS[@]}" "$@"
 EOF
   chmod 755 "${pkgdir}/usr/bin/${_binaryname}"
 }
