@@ -1,5 +1,6 @@
 # Maintainer: Sam Sinclair <sam at playleft dot com>
 # Contributor: Pujan Modha <pujan.pm@hotmail.com>
+# Contributor: init_harsh
 # /*
 #  * SPDX-FileCopyrightText: 2025 Arch Linux Contributors
 #  *
@@ -7,7 +8,7 @@
 #  */
 pkgbase = helium-browser-bin
 	pkgdesc = Private, fast, and honest web browser based on Chromium
-	pkgver = 0.5.7.1
+	pkgver = 0.5.8.1
 	pkgrel = 1
 	url = https://github.com/imputnet/helium-linux
 	arch = x86_64
@@ -35,9 +36,9 @@ pkgbase = helium-browser-bin
 	optdepends = kwallet: support for storing passwords in KWallet on Plasma
 	optdepends = upower: Battery Status API support
 	options = strip
-	source_x86_64 = helium-0.5.7.1-x86_64_linux.tar.xz::https://github.com/imputnet/helium-linux/releases/download/0.5.7.1/helium-0.5.7.1-x86_64_linux.tar.xz
-	source_x86_64 = helium.desktop::https://raw.githubusercontent.com/imputnet/helium-linux/0.5.7.1/package/helium.desktop
-	sha256sums_x86_64 = f6c881a8228969939f8a20c5205cfc886558bad83023abebb617408edb5ec053
+	source_x86_64 = helium-0.5.8.1-x86_64_linux.tar.xz::https://github.com/imputnet/helium-linux/releases/download/0.5.8.1/helium-0.5.8.1-x86_64_linux.tar.xz
+	source_x86_64 = helium.desktop::https://raw.githubusercontent.com/imputnet/helium-linux/0.5.8.1/package/helium.desktop
+	sha256sums_x86_64 = b0e464446600ebf42eeafe8c03e516ae8fb377f6d7883dc0a16e0f80350f5923
 	sha256sums_x86_64 = cce8668c18d33077a585cb5d96522e5a02ae017a2baf800f8d7214ce6d05d3d2
 
 pkgname = helium-browser-bin
