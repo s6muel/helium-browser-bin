@@ -1,5 +1,6 @@
 # Maintainer: Sam Sinclair <sam at playleft dot com>
 # Contributor: Pujan Modha <pujan.pm@hotmail.com>
+# Contributor: init_harsh
 # /*
 #  * SPDX-FileCopyrightText: 2025 Arch Linux Contributors
 #  *
