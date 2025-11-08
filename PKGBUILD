@@ -9,7 +9,7 @@
 _pkgname="helium"
 pkgname="${_pkgname}-browser-bin"
 _binaryname="helium-browser"
-pkgver=0.6.3.1
+pkgver=0.6.4.1
 _tarball="${_pkgname}-${pkgver}-x86_64_linux.tar.xz"
 pkgrel=1
 pkgdesc="Private, fast, and honest web browser based on Chromium"
@@ -28,18 +28,17 @@ optdepends=('pipewire: WebRTC desktop sharing under Wayland'
             'upower: Battery Status API support')
 source_x86_64=(
     "${_tarball}::https://github.com/imputnet/helium-linux/releases/download/${pkgver}/${_tarball}"
-    "helium.desktop::https://raw.githubusercontent.com/imputnet/helium-linux/${pkgver}/package/helium.desktop"
 )
 
-sha256sums_x86_64=('118224ff46a6b671db9c85a269f92f7d169544ae00d6172a52b6acb1e144e3cd'
-                   'cce8668c18d33077a585cb5d96522e5a02ae017a2baf800f8d7214ce6d05d3d2')
+sha256sums_x86_64=('f711159c6ca6e7bf6b47a46e9d2e075985779cb93538310819f83c3ed3434949')
+
 prepare() {
   # Fix upstream desktop file to use the correct binary name and app name
   sed -i \
     -e 's/Exec=chromium/Exec=helium-browser/' \
     -e 's/Name=Helium$/Name=Helium Browser/' \
     -e 's/Icon=helium/Icon=helium-browser/' \
-    "${srcdir}/helium.desktop"
+    "${srcdir}/${_pkgname}-${pkgver}-x86_64_linux/helium.desktop"
 }
 package() {
   install -dm755 "${pkgdir}/opt/${pkgname}"
