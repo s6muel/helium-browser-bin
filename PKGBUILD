@@ -9,7 +9,7 @@
 _pkgname="helium"
 pkgname="${_pkgname}-browser-bin"
 _binaryname="helium-browser"
-pkgver=0.5.8.1
+pkgver=0.6.3.1
 _tarball="${_pkgname}-${pkgver}-x86_64_linux.tar.xz"
 pkgrel=1
 pkgdesc="Private, fast, and honest web browser based on Chromium"
@@ -31,7 +31,7 @@ source_x86_64=(
     "helium.desktop::https://raw.githubusercontent.com/imputnet/helium-linux/${pkgver}/package/helium.desktop"
 )
 
-sha256sums_x86_64=('b0e464446600ebf42eeafe8c03e516ae8fb377f6d7883dc0a16e0f80350f5923'
+sha256sums_x86_64=('118224ff46a6b671db9c85a269f92f7d169544ae00d6172a52b6acb1e144e3cd'
                    'cce8668c18d33077a585cb5d96522e5a02ae017a2baf800f8d7214ce6d05d3d2')
 prepare() {
   # Fix upstream desktop file to use the correct binary name and app name
