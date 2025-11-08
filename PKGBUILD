@@ -14,7 +14,7 @@ pkgrel=1
 pkgdesc="Private, fast, and honest web browser based on Chromium"
 arch=('x86_64' 'aarch64')
 url="https://github.com/imputnet/helium-linux"
-license=('GPL-3.0-only')
+license=('GPL-3.0-only AND BSD-3-Clause')
 options=('strip')
 depends=('gtk3' 'nss' 'alsa-lib' 'xdg-utils' 'libxss' 'libcups' 'libgcrypt'
          'ttf-liberation' 'systemd' 'dbus' 'libpulse' 'pciutils' 'libva'
@@ -27,13 +27,17 @@ optdepends=('pipewire: WebRTC desktop sharing under Wayland'
             'upower: Battery Status API support')
 source_x86_64=(
     "${_pkgname}-${pkgver}-x86_64_linux.tar.xz::https://github.com/imputnet/helium-linux/releases/download/${pkgver}/${_pkgname}-${pkgver}-x86_64_linux.tar.xz"
+    "LICENSE.ungoogled_chromium::https://raw.githubusercontent.com/imputnet/helium-linux/${pkgver}/LICENSE.ungoogled_chromium"
 )
 source_aarch64=(
     "${_pkgname}-${pkgver}-arm64_linux.tar.xz::https://github.com/imputnet/helium-linux/releases/download/${pkgver}/${_pkgname}-${pkgver}-arm64_linux.tar.xz"
+    "LICENSE.ungoogled_chromium::https://raw.githubusercontent.com/imputnet/helium-linux/${pkgver}/LICENSE.ungoogled_chromium"
 )
 
-sha256sums_x86_64=('f711159c6ca6e7bf6b47a46e9d2e075985779cb93538310819f83c3ed3434949')
-sha256sums_aarch64=('4b9905f8ad8ac21a9ad061baf7536f9d4ff67eb50258bf412ab54aef2ddbcd21')
+sha256sums_x86_64=('f711159c6ca6e7bf6b47a46e9d2e075985779cb93538310819f83c3ed3434949'
+                   '9539b394e4179952698894bd62ef6566b6804ab0ff360dcf3a511cfaf7f78c4d')
+sha256sums_aarch64=('4b9905f8ad8ac21a9ad061baf7536f9d4ff67eb50258bf412ab54aef2ddbcd21'
+                    '9539b394e4179952698894bd62ef6566b6804ab0ff360dcf3a511cfaf7f78c4d')
 
 prepare() {
   # Get architecture specific directory
@@ -61,6 +65,9 @@ package() {
     "${pkgdir}/usr/share/pixmaps/${_binaryname}.png"
   install -Dm644 "${pkgdir}/opt/${pkgname}/product_logo_256.png" \
     "${pkgdir}/usr/share/icons/hicolor/256x256/apps/${_binaryname}.png"
+  # Install Ungoogled Chromium license
+  install -Dm644 "${srcdir}/LICENSE.ungoogled_chromium" \
+    "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE.ungoogled_chromium"
   # Install a simple wrapper
   install -dm755 "${pkgdir}/usr/bin"
   cat > "${pkgdir}/usr/bin/${_binaryname}" << 'EOF'
