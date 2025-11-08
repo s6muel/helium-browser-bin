@@ -9,13 +9,12 @@
 _pkgname="helium"
 pkgname="${_pkgname}-browser-bin"
 _binaryname="helium-browser"
-pkgver=0.6.3.1
-_tarball="${_pkgname}-${pkgver}-x86_64_linux.tar.xz"
+pkgver=0.6.4.1
 pkgrel=1
 pkgdesc="Private, fast, and honest web browser based on Chromium"
-arch=('x86_64')
+arch=('x86_64' 'aarch64')
 url="https://github.com/imputnet/helium-linux"
-license=('GPL-3.0-only')
+license=('GPL-3.0-only AND BSD-3-Clause')
 options=('strip')
 depends=('gtk3' 'nss' 'alsa-lib' 'xdg-utils' 'libxss' 'libcups' 'libgcrypt'
          'ttf-liberation' 'systemd' 'dbus' 'libpulse' 'pciutils' 'libva'
@@ -27,34 +26,48 @@ optdepends=('pipewire: WebRTC desktop sharing under Wayland'
             'kwallet: support for storing passwords in KWallet on Plasma'
             'upower: Battery Status API support')
 source_x86_64=(
-    "${_tarball}::https://github.com/imputnet/helium-linux/releases/download/${pkgver}/${_tarball}"
-    "helium.desktop::https://raw.githubusercontent.com/imputnet/helium-linux/${pkgver}/package/helium.desktop"
+    "${_pkgname}-${pkgver}-x86_64_linux.tar.xz::https://github.com/imputnet/helium-linux/releases/download/${pkgver}/${_pkgname}-${pkgver}-x86_64_linux.tar.xz"
+    "LICENSE.ungoogled_chromium::https://raw.githubusercontent.com/imputnet/helium-linux/${pkgver}/LICENSE.ungoogled_chromium"
+)
+source_aarch64=(
+    "${_pkgname}-${pkgver}-arm64_linux.tar.xz::https://github.com/imputnet/helium-linux/releases/download/${pkgver}/${_pkgname}-${pkgver}-arm64_linux.tar.xz"
+    "LICENSE.ungoogled_chromium::https://raw.githubusercontent.com/imputnet/helium-linux/${pkgver}/LICENSE.ungoogled_chromium"
 )
 
-sha256sums_x86_64=('118224ff46a6b671db9c85a269f92f7d169544ae00d6172a52b6acb1e144e3cd'
-                   'cce8668c18d33077a585cb5d96522e5a02ae017a2baf800f8d7214ce6d05d3d2')
+sha256sums_x86_64=('f711159c6ca6e7bf6b47a46e9d2e075985779cb93538310819f83c3ed3434949'
+                   '9539b394e4179952698894bd62ef6566b6804ab0ff360dcf3a511cfaf7f78c4d')
+sha256sums_aarch64=('4b9905f8ad8ac21a9ad061baf7536f9d4ff67eb50258bf412ab54aef2ddbcd21'
+                    '9539b394e4179952698894bd62ef6566b6804ab0ff360dcf3a511cfaf7f78c4d')
+
 prepare() {
+  # Get architecture specific directory
+  _archdir="${_pkgname}-${pkgver}-$([[ $CARCH == "aarch64" ]] && echo "arm64" || echo "x86_64")_linux"
   # Fix upstream desktop file to use the correct binary name and app name
   sed -i \
     -e 's/Exec=chromium/Exec=helium-browser/' \
     -e 's/Name=Helium$/Name=Helium Browser/' \
     -e 's/Icon=helium/Icon=helium-browser/' \
-    "${srcdir}/helium.desktop"
+    "${srcdir}/${_archdir}/helium.desktop"
 }
 package() {
+  # Get architecture specific directory
+  _archdir="${_pkgname}-${pkgver}-$([[ $CARCH == "aarch64" ]] && echo "arm64" || echo "x86_64")_linux"
   install -dm755 "${pkgdir}/opt/${pkgname}"
-  cp -a "${srcdir}/${_pkgname}-${pkgver}-x86_64_linux/"* "${pkgdir}/opt/${pkgname}/"
+  cp -a "${srcdir}/${_archdir}/"* "${pkgdir}/opt/${pkgname}/"
   # Disable user-local desktop generation in chrome-wrapper
   sed -i 's/exists_desktop_file || generate_desktop_file/true/' \
     "$pkgdir/opt/${pkgname}/chrome-wrapper"
   # Install proper desktop file
-  install -Dm644 "${srcdir}/helium.desktop" \
+  install -Dm644 "${srcdir}/${_archdir}/helium.desktop" \
     "${pkgdir}/usr/share/applications/${_binaryname}.desktop"
   # Install icon for desktop file
   install -Dm644 "${pkgdir}/opt/${pkgname}/product_logo_256.png" \
     "${pkgdir}/usr/share/pixmaps/${_binaryname}.png"
   install -Dm644 "${pkgdir}/opt/${pkgname}/product_logo_256.png" \
     "${pkgdir}/usr/share/icons/hicolor/256x256/apps/${_binaryname}.png"
+  # Install Ungoogled Chromium license
+  install -Dm644 "${srcdir}/LICENSE.ungoogled_chromium" \
+    "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE.ungoogled_chromium"
   # Install a simple wrapper
   install -dm755 "${pkgdir}/usr/bin"
   cat > "${pkgdir}/usr/bin/${_binaryname}" << 'EOF'

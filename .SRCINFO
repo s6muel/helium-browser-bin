@@ -8,11 +8,12 @@
 #  */
 pkgbase = helium-browser-bin
 	pkgdesc = Private, fast, and honest web browser based on Chromium
-	pkgver = 0.6.3.1
+	pkgver = 0.6.4.1
 	pkgrel = 1
 	url = https://github.com/imputnet/helium-linux
 	arch = x86_64
-	license = GPL-3.0-only
+	arch = aarch64
+	license = GPL-3.0-only AND BSD-3-Clause
 	depends = gtk3
 	depends = nss
 	depends = alsa-lib
@@ -36,9 +37,13 @@ pkgbase = helium-browser-bin
 	optdepends = kwallet: support for storing passwords in KWallet on Plasma
 	optdepends = upower: Battery Status API support
 	options = strip
-	source_x86_64 = helium-0.6.3.1-x86_64_linux.tar.xz::https://github.com/imputnet/helium-linux/releases/download/0.6.3.1/helium-0.6.3.1-x86_64_linux.tar.xz
-	source_x86_64 = helium.desktop::https://raw.githubusercontent.com/imputnet/helium-linux/0.6.3.1/package/helium.desktop
-	sha256sums_x86_64 = 118224ff46a6b671db9c85a269f92f7d169544ae00d6172a52b6acb1e144e3cd
-	sha256sums_x86_64 = cce8668c18d33077a585cb5d96522e5a02ae017a2baf800f8d7214ce6d05d3d2
+	source_x86_64 = helium-0.6.4.1-x86_64_linux.tar.xz::https://github.com/imputnet/helium-linux/releases/download/0.6.4.1/helium-0.6.4.1-x86_64_linux.tar.xz
+	source_x86_64 = LICENSE.ungoogled_chromium::https://raw.githubusercontent.com/imputnet/helium-linux/0.6.4.1/LICENSE.ungoogled_chromium
+	sha256sums_x86_64 = f711159c6ca6e7bf6b47a46e9d2e075985779cb93538310819f83c3ed3434949
+	sha256sums_x86_64 = 9539b394e4179952698894bd62ef6566b6804ab0ff360dcf3a511cfaf7f78c4d
+	source_aarch64 = helium-0.6.4.1-arm64_linux.tar.xz::https://github.com/imputnet/helium-linux/releases/download/0.6.4.1/helium-0.6.4.1-arm64_linux.tar.xz
+	source_aarch64 = LICENSE.ungoogled_chromium::https://raw.githubusercontent.com/imputnet/helium-linux/0.6.4.1/LICENSE.ungoogled_chromium
+	sha256sums_aarch64 = 4b9905f8ad8ac21a9ad061baf7536f9d4ff67eb50258bf412ab54aef2ddbcd21
+	sha256sums_aarch64 = 9539b394e4179952698894bd62ef6566b6804ab0ff360dcf3a511cfaf7f78c4d
 
 pkgname = helium-browser-bin

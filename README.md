@@ -6,25 +6,35 @@ This is the public version of the AUR package `helium-browser-bin` for the Heliu
 **Table of Contents**
 
 - [AUR Packaging for the Helium Browser](#aur-packaging-for-the-helium-browser)
-  - [Goals](#goals)
-  - [Licensing Compliance](#licensing-compliance)
-  - [Understanding the `PKGBUILD`](#understanding-the-pkgbuild)
-    - [`prepare()`](#prepare)
+- [Goals](#goals)
+- [Licensing Compliance](#licensing-compliance)
+- [Understanding the `PKGBUILD`](#understanding-the-pkgbuild)
+  - [`prepare()`](#prepare)
+    - [Get architecture specific directory](#get-architecture-specific-directory)
       - [Inclusion Rationale](#inclusion-rationale)
-    - [`package()`](#package)
-      - [Disable user-local desktop generation in chrome-wrapper](#disable-user-local-desktop-generation-in-chrome-wrapper)
-        - [Inclusion Rationale](#inclusion-rationale-1)
-      - [Install a simple wrapper](#install-a-simple-wrapper)
-        - [Inclusion Rationale](#inclusion-rationale-2)
-      - [Adding `helium-browser-flags.conf` support](#adding-helium-browser-flagsconf-support)
-        - [Expected Formats](#expected-formats)
-        - [Verification](#verification)
-        - [Inclusion Rationale](#inclusion-rationale-3)
-  - [Cheers](#cheers)
+    - [Fix upstream `.desktop` File](#fix-upstream-desktop-file)
+      - [Inclusion Rationale](#inclusion-rationale-1)
+  - [`package()`](#package)
+    - [Get architecture specific directory](#get-architecture-specific-directory-1)
+      - [Inclusion Rationale](#inclusion-rationale-2)
+    - [Disable user-local desktop generation in chrome-wrapper](#disable-user-local-desktop-generation-in-chrome-wrapper)
+      - [Inclusion Rationale](#inclusion-rationale-3)
+    - [Install a simple wrapper](#install-a-simple-wrapper)
+      - [Inclusion Rationale](#inclusion-rationale-4)
+    - [Adding `helium-browser-flags.conf` support](#adding-helium-browser-flagsconf-support)
+      - [Expected Formats](#expected-formats)
+        - [`.conf`](#conf)
+          - [Single Line](#single-line)
+          - [Multi Line](#multi-line)
+        - [Environment](#environment)
+      - [Verification](#verification)
+      - [Inclusion Rationale](#inclusion-rationale-5)
+- [Cheers](#cheers)
 
 <!-- markdown-toc end -->
 
-## Goals
+
+# Goals
 
 1.  Faithfully reproduce upstream while adding expected packaging-level integrations only (e.g., flags file support).
 2.  Insure developer (or other maintainer) takeover is smooth.
@@ -32,23 +42,49 @@ This is the public version of the AUR package `helium-browser-bin` for the Heliu
 4.  Relay relevant feedback and bug reports upstream.
 5.  Users should be able to understand the `PKGBUILD`.
 
-## Licensing Compliance
-To be suitable for official repo adoption, `PKGBUILD` and source licensing needs to be clearly identified. For guidance, see [Arch Wiki Package Guidelines](https://wiki.archlinux.org/title/Arch_package_guidelines#Licenses).
-- [ ] Arch Package Guidelines 11.1 compliance
-    - [x] License Helium Browser.
-    - [ ] License Ungoogled Chromium's build process.
-- [x] Arch Package Guidelines 11.2 compliance
-    - [x] `REUSE` compliance
-    - Since `v0.4.7.1`
-    - Verification: `pkgctl license check`
 
-## Understanding the `PKGBUILD`
+# Licensing Compliance
 
-### `prepare()`
+To be suitable for official repo adoption, `PKGBUILD` and source licensing needs to be clearly identified. For guidance, see [Arch Wiki Package Guidelines](https://wiki.archlinux.org/title/Arch_package_guidelines#Licenses)
 
-Here, we adjust the upstream `helium.desktop` file simply by appending `browser`, or some variation of it.
+-   [X] Arch Package Guidelines 11.1 compliance
+    -   [X] License Helium Browser
+    -   [X] License Ungoogle Chromium's build process
+        -   Since `v0.6.4.1`
+-   [X] Arch Package Guidelines 11.2 compliance
+    -   [X] `REUSE` compliance
+        -   Since `v0.4.7.1`
+        -   Verification: `pkgctl license check`
 
-``` bash
+
+# Understanding the `PKGBUILD`
+
+
+## `prepare()`
+
+
+### Get architecture specific directory
+
+Since including the upstream `aarch64` tarball in `0.6.4.1`, we need to differentiate between architectures to insure `makepkg` works from the correct directories. We therefore utilise `$CARCH` to return the working system architecture and assign it to the `_archdir` variable.
+
+This adjustment exists to ensure upstream's naming of `arm64` matches the GNU Linux Multiarch Archtecture Specifier of `aarch64` as returned by `$CARCH` on said systems. For reference, see <https://wiki.debian.org/Multiarch/Tuples>
+
+```bash
+# Get architecture specific directory
+_archdir="${_pkgname}-${pkgver}-$([[ $CARCH == "aarch64" ]] && echo "arm64" || echo "x86_64")_linux"
+```
+
+
+#### Inclusion Rationale
+
+Installations will break without this variable.
+
+
+### Fix upstream `.desktop` File
+
+Here, we adjust the upstream `helium.desktop` file simply by appending `browser`, or some variation of it, e.g., `Helium -> Helium Browser`.
+
+```bash
 # Fix upstream desktop file to use the correct name
 sed -i \
 -e 's/Exec=chromium/Exec=helium-browser/' \
@@ -57,30 +93,45 @@ sed -i \
 "${srcdir}/helium.desktop"
 ```
 
+
 #### Inclusion Rationale
 
 Avoid naming and icon clashes, and point `Exec` to our wrapper script.
 
-### `package()`
 
-#### Disable user-local desktop generation in chrome-wrapper
+## `package()`
+
+
+### Get architecture specific directory
+
+To understand this line, refer to the `prepare()` section. The reason for duplication is that the `prepare()` and `package()` functions operate in separate shells, and do not inherit variables.
+
+
+#### Inclusion Rationale
+
+Installations will break without this variable.
+
+
+### Disable user-local desktop generation in chrome-wrapper
 
 This was contributed by Pujan Modha in PR #1. It patches the installed `chrome-wrapper` so no stray `chromium-devel.desktop` file gets written to `~/.local/share/applications`. This behaviour stems from the upstream build process, but it's not a good user experience. For a full discussion on this see [PR #1](https://github.com/s6muel/helium-browser-bin/pull/1).
 
-``` bash
+```bash
 sed -i 's/exists_desktop_file || generate_desktop_file/true/' \
 "$pkgdir/opt/${pkgname}/chrome-wrapper"
 ```
 
-##### Inclusion Rationale
 
-Establishes expected end user behaviour \[i.e., no unexpected entries in application runners\].
+#### Inclusion Rationale
 
-#### Install a simple wrapper
+Establishes expected end user behaviour [i.e., no unexpected entries in application runners].
 
-In our `prepare()` function we added `Exec=helium-browser` to our `.desktop` file. Now we create the wrapper so the application can accurately resolve its `PATH` and environment. In short, this makes sure that execution of the `helium.desktop` from an application runner is robust. For a full discussion, see [PR \#1](https://github.com/s6muel/helium-browser-bin/pull/1).
 
-``` bash
+### Install a simple wrapper
+
+In our `prepare()` function we added `Exec=helium-browser` to our `.desktop` file. Now we create the wrapper so the application can accurately resolve its `PATH` and environment. In short, this makes sure that execution of the `helium.desktop` from an application runner is robust. For a full discussion, see [PR #1](https://github.com/s6muel/helium-browser-bin/pull/1).
+
+```bash
     install -dm755 "${pkgdir}/usr/bin"
     # We write the output of Line 101 into a script at
     # /usr/bin/helium-browser
@@ -92,32 +143,35 @@ EOF
     # Now we make sure we can execute the script that our
     # .desktop file expects in its Exec= line.
     chmod 755 "${pkgdir}/usr/bin/${_binaryname}"
+
 ```
 
-##### Inclusion Rationale
+
+#### Inclusion Rationale
 
 It's good when we can run applications ;).
 
-#### Adding `helium-browser-flags.conf` support
+
+### Adding `helium-browser-flags.conf` support
 
 This adds support for system and user flags in `.conf` files using `/etc/helium-browser-flags.conf` and `$XDG_CONFIG_HOME/helium-browser-flags.conf` respectively. Setting flags in the environment is also supported via `$HELIUM_USER_FLAGS`.
 
-A user on the AUR [commented](https://aur.archlinux.org/packages/helium-browser-bin#comment-1044045) that the expected behaviour of parsing `*-flags.conf` on startup for Helium was non-existent. This is a packaging feature specific to Arch and included with the `chromium` package.
+A user on the [AUR commented](https://aur.archlinux.org/packages/helium-browser-bin#comment-1044045) that the expected behaviour of parsing `*-flags.conf` on startup for Helium was non-existent. This is a packaging feature specific to Arch and included with the `chromium` package.
 
-The [official Arch PKGBUILD for Chromium](https://gitlab.archlinux.org/archlinux/packaging/packages/chromium/-/blob/main/PKGBUILD?ref_type=heads) implements persistent flags via a small `C` based launcher (`chromium-launcher`) that reads `/etc/chromium-flags.conf` and `$XDG_CONFIG_HOME/chromium-flags.conf`, parses each non-comment line, and appends the resulting arguments on startup.
+The [official Arch PKGBUILD for Chromium](https://gitlab.archlinux.org/archlinux/packaging/packages/chromium/-/blob/main/PKGBUILD?ref_type=heads) implements persistent flags via a small `C` launcher (`chromium-launcher`) that reads `/etc/chromium-flags.conf` and `$XDG_CONFIG_HOME/chromium-flags.conf`, parses each non-comment line, and appends the resulting arguments on startup.
 
-The parser honours quoting and escaping, but does not allow command substitution (i.e., `--flag=$(rm -rf /)` or `` --flag=`cat /etc/passwd` ``), variable expansion (i.e., `$HOME` will not expand and is ignored), globbing, or expansion of `~`.
+The parser honours quoting and escaping, but does not allow command substitution (i.e., `--flag=$(rm -rf /)` or `` --flag=`cat /etc/passwd` ``.), variable expansion (i.e., `$HOME` will not expand and is ignored), globbing, or expansion of `~`.
 
 We reproduce this behaviour in `bash` for `helium-browser-bin` as follows:
 
-- Lines with `$(..)` or `` `backticks` `` are ignored to block command substitution.
-- `$VARS` and `~` are not expanded and passed literally.
-- Globbing is disabled during `eval`.
-- Comments and blank lines ignored.
+-   Lines with `$(..)` or `` `backticks` `` are ignored to block command substitution.
+-   `$VARS` and `~` are not expanded and passed literally.
+-   Globbing is disabled during `eval`.
+-   Comments and blank lines ignored.
 
 A `bash` implementation has been chosen to minimise dependencies and maintainer overhead. It has been tested successfully as of October 20, 2025.
 
-``` bash
+```bash
 # Fails on errors or unreadable commands
 set -euo pipefail
 
@@ -164,9 +218,9 @@ append_flags_file "$USR_CONF"
 
 # Add environment var $HELIUM_USER_FLAGS
 if [[ -n "${HELIUM_USER_FLAGS:-}" ]]; then
-    # Split env contents on whitespace; users can quote if needed.
-    read -r -a ENV_FLAGS <<< "$HELIUM_USER_FLAGS"
-    FLAGS+=("${ENV_FLAGS[@]}")
+  # Split env contents on whitespace; users can quote if needed.
+  read -r -a ENV_FLAGS <<< "$HELIUM_USER_FLAGS"
+  FLAGS+=("${ENV_FLAGS[@]}")
 fi
 
 # Append flags to exec
@@ -174,36 +228,51 @@ exec /opt/helium-browser-bin/chrome-wrapper "${FLAGS[@]}" "$@"
 EOF
 ```
 
-##### Expected Formats
 
-**`.conf`**
--  Single Line
-    ``` conf
-    --your-flag --another-flag="with values"
-    ```
--  Multi Line
-    ``` conf
-    --your-flag
-    --another-flag="with values"
-    ```
-**Environment**
-- Single line only, split on white space, quotes are supported.
-    ``` bash
-    export HELIUM_USER_FLAGS=--your-flags="with values" --just-flag-it
-    ```
+#### Expected Formats
 
-##### Verification
+
+##### `.conf`
+
+
+###### Single Line
+
+```conf
+--your-flag --another-flag="with values"
+```
+
+
+###### Multi Line
+
+```conf
+--your-flag
+--another-flag="with values"
+```
+
+
+##### Environment
+
+Single line only, split on white space, quotes are supported.
+
+```bash
+export HELIUM_USER_FLAGS=--your-flags="with values" --just-flag-it
+```
+
+
+#### Verification
 
 Open `helium://version` and check the *Command Line* entry. It should represent your flags.
 
-##### Inclusion Rationale
+
+#### Inclusion Rationale
 
 Arch users expect to be able to apply flags via `~/.config/*-flags.conf`.
 
-## Cheers
 
-- @imputnet and the [Helium Project](https://github.com/imputnet/helium) for developing a great browser.
-- @pujan-modha for contributing a robust wrapper mechanism and for providing insight into upstream mechanics.
-- AUR user `networkException` for maintaining [Ungoogled Chromium on the AUR](https://aur.archlinux.org/packages/ungoogled-chromium-bin) and saving me a bunch of time in establishing the Helium package.
-- AUR user `init_harsh` for their bash contributions which inspired the `helium-browser-flags.conf` support and [raising the issue originally](https://aur.archlinux.org/packages/helium-browser-bin#comment-1044045).
-- @foutrelis for writing the [chromium-launcher](https://github.com/foutrelis/chromium-launcher).
+# Cheers
+
+-   @imputnet and the [Helium Project](https://github.com/imputnet/helium) for developing a great browser.
+-   @pujan-modha for contributing a robust wrapper mechanism and for providing insight into upstream mechanics.
+-   AUR user `networkException` for maintaining [Ungoogled Chromium on the AUR](https://aur.archlinux.org/packages/ungoogled-chromium-bin) and saving me a bunch of time in establishing the Helium package.
+-   AUR user `init_harsh` for their bash contributions which inspired the `helium-browser-flags.conf` support and [raising the issue originally](https://aur.archlinux.org/packages/helium-browser-bin#comment-1044045).
+-   @foutrelis for writing the [chromium-launcher](https://github.com/foutrelis/chromium-launcher).
