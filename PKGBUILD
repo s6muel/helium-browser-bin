@@ -15,7 +15,7 @@ pkgdesc="Private, fast, and honest web browser based on Chromium"
 arch=('x86_64' 'aarch64')
 url="https://github.com/imputnet/helium-linux"
 license=('GPL-3.0-only AND BSD-3-Clause')
-options=('strip')
+options=('strip' '!debug')
 depends=('gtk3' 'nss' 'alsa-lib' 'xdg-utils' 'libxss' 'libcups' 'libgcrypt'
          'ttf-liberation' 'systemd' 'dbus' 'libpulse' 'pciutils' 'libva'
          'libffi' 'desktop-file-utils' 'hicolor-icon-theme')
