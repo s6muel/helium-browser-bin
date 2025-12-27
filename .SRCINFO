@@ -1,15 +1,7 @@
-# Maintainer: Sam Sinclair <sam at playleft dot com>
-# Contributor: Pujan Modha <pujan.pm@hotmail.com>
-# Contributor: init_harsh
-# /*
-#  * SPDX-FileCopyrightText: 2025 Arch Linux Contributors
-#  *
-#  * SPDX-License-Identifier: 0BSD
-#  */
 pkgbase = helium-browser-bin
 	pkgdesc = Private, fast, and honest web browser based on Chromium
 	pkgver = 0.7.7.1
-	pkgrel = 1
+	pkgrel = 2
 	url = https://github.com/imputnet/helium-linux
 	arch = x86_64
 	arch = aarch64
