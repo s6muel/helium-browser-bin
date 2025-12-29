@@ -72,27 +72,6 @@ package() {
 # Fails on errors or unreadable commands
 set -euo pipefail
 
-# Let the wrapped binary know that it has been run through the wrapper.
-export CHROME_WRAPPER="`readlink -f "$0"`"
-
-HERE="`dirname "$CHROME_WRAPPER"`"
-
-# We include some xdg utilities next to the binary, and we want to prefer them
-# over the system versions when we know the system versions are very old. We
-# detect whether the system xdg utilities are sufficiently new to be likely to
-# work for us by looking for xdg-settings. If we find it, we leave $PATH alone,
-# so that the system xdg utilities (including any distro patches) will be used.
-if ! command -v xdg-settings &> /dev/null; then
-  # Old xdg utilities. Prepend $HERE to $PATH to use ours instead.
-  export PATH="$HERE:$PATH"
-else
-  # Use system xdg utilities. But first create mimeapps.list if it doesn't
-  # exist; some systems have bugs in xdg-mime that make it fail without it.
-  xdg_app_dir="${XDG_DATA_HOME:-$HOME/.local/share/applications}"
-  mkdir -p "$xdg_app_dir"
-  [ -f "$xdg_app_dir/mimeapps.list" ] || touch "$xdg_app_dir/mimeapps.list"
-fi
-
 XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-"$HOME/.config"}"
 
 SYS_CONF="/etc/helium-browser-flags.conf"
@@ -139,14 +118,6 @@ if [[ -n "${HELIUM_USER_FLAGS:-}" ]]; then
 fi
 
 export CHROME_VERSION_EXTRA="stable"
-
-# Sanitize std{in,out,err} because they'll be shared with untrusted child
-# processes (http://crbug.com/376567).
-exec < /dev/null
-exec > >(exec cat)
-exec 2> >(exec cat >&2)
-
-export CHROME_VERSION_EXTRA='stable'
 
 exec /opt/helium-browser-bin/chrome "${FLAGS[@]}" "$@"
 EOF
