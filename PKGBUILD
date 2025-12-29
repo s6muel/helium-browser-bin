@@ -54,9 +54,6 @@ package() {
   _archdir="${_pkgname}-${pkgver}-$([[ $CARCH == "aarch64" ]] && echo "arm64" || echo "x86_64")_linux"
   install -dm755 "${pkgdir}/opt/${pkgname}"
   cp -a "${srcdir}/${_archdir}/"* "${pkgdir}/opt/${pkgname}/"
-  # # Disable user-local desktop generation in chrome-wrapper
-  # sed -i 's/exists_desktop_file || generate_desktop_file/true/' \
-  #   "$pkgdir/opt/${pkgname}/chrome-wrapper"
   # Install proper desktop file
   install -Dm644 "${srcdir}/${_archdir}/helium.desktop" \
     "${pkgdir}/usr/share/applications/${_pkgname}.desktop"
