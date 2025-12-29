@@ -54,9 +54,6 @@ package() {
   _archdir="${_pkgname}-${pkgver}-$([[ $CARCH == "aarch64" ]] && echo "arm64" || echo "x86_64")_linux"
   install -dm755 "${pkgdir}/opt/${pkgname}"
   cp -a "${srcdir}/${_archdir}/"* "${pkgdir}/opt/${pkgname}/"
-  # Rename upstream chrome binary to helium-browser
-  mv "${pkgdir}/opt/${pkgname}/chrome" \
-     "${pkgdir}/opt/${pkgname}/${_binaryname}"
   # # Disable user-local desktop generation in chrome-wrapper
   # sed -i 's/exists_desktop_file || generate_desktop_file/true/' \
   #   "$pkgdir/opt/${pkgname}/chrome-wrapper"
@@ -154,7 +151,7 @@ exec 2> >(exec cat >&2)
 
 export CHROME_VERSION_EXTRA='stable'
 
-exec /opt/helium-browser-bin/helium-browser "${FLAGS[@]}" "$@"
+exec /opt/helium-browser-bin/chrome "${FLAGS[@]}" "$@"
 EOF
   chmod 755 "${pkgdir}/usr/bin/${_binaryname}"
 }
