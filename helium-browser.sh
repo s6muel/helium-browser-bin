@@ -44,7 +44,19 @@ if [[ -n "${HELIUM_USER_FLAGS:-}" ]]; then
   FLAGS+=("${ENV_FLAGS[@]}")
 fi
 
+# Let the wrapped binary know that it has been run through the wrapper.
+export CHROME_WRAPPER="`readlink -f "$0"`"
+
+# Set Chromium version to 'stable'
 export CHROME_VERSION_EXTRA="stable"
 
-exec /opt/helium-browser-bin/chrome "${FLAGS[@]}" "$@"
+# Sanitize std{in,out,err} because they'll be shared with untrusted child
+# processes (http://crbug.com/376567).
+exec < /dev/null
+exec > >(exec cat)
+exec 2> >(exec cat >&2)
+
+# -a "$0" makes the process appear as the name of the wrapper, i.e.
+# 'helium-browser'. This doesn't affect Kernel level process naming.
+exec -a "$0" /opt/helium-browser-bin/chrome "${FLAGS[@]}" "$@"
 
