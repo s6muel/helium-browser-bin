@@ -34,7 +34,7 @@ source_aarch64=(
     "${_pkgname}-${pkgver}-arm64_linux.tar.xz::https://github.com/imputnet/helium-linux/releases/download/${pkgver}/${_pkgname}-${pkgver}-arm64_linux.tar.xz"
     "LICENSE.ungoogled_chromium::https://raw.githubusercontent.com/imputnet/helium-linux/${pkgver}/LICENSE.ungoogled_chromium"
 )
-sha256sums=('8e35e9633e6cd8b29678e2b9dd82b2962d32074b27fcd88f285947911d336c33')
+sha256sums=('09a0456f032b9a2cbfea73eb93356d6a1faceb2a11b608b560e00efa9e8bf78c')
 sha256sums_x86_64=('698f46c080cf4dcb249b9e4d96e4b2c640870ba76b77a05d05a358661af39511'
                    '9539b394e4179952698894bd62ef6566b6804ab0ff360dcf3a511cfaf7f78c4d')
 sha256sums_aarch64=('efa849d7dfdb1f3744d7ffe478617d8a66243073b2e951e9039e9bc44920c200'
