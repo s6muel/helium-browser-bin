@@ -58,13 +58,13 @@ package() {
   sed -i 's/exists_desktop_file || generate_desktop_file/true/' \
     "$pkgdir/opt/${pkgname}/chrome-wrapper"
   # Install proper desktop file
-  install -Dm644 "${srcdir}/${_archdir}/helium.desktop" \
-    "${pkgdir}/usr/share/applications/${_binaryname}.desktop"
+  install -Dm644 "${srcdir}/${_archdir}/${_pkgname}.desktop" \
+    "${pkgdir}/usr/share/applications/${_pkgname}.desktop"
   # Install icon for desktop file
   install -Dm644 "${pkgdir}/opt/${pkgname}/product_logo_256.png" \
-    "${pkgdir}/usr/share/pixmaps/${_binaryname}.png"
+    "${pkgdir}/usr/share/pixmaps/${_pkgname}.png"
   install -Dm644 "${pkgdir}/opt/${pkgname}/product_logo_256.png" \
-    "${pkgdir}/usr/share/icons/hicolor/256x256/apps/${_binaryname}.png"
+    "${pkgdir}/usr/share/icons/hicolor/256x256/apps/${_pkgname}.png"
   # Install Ungoogled Chromium license
   install -Dm644 "${srcdir}/LICENSE.ungoogled_chromium" \
     "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE.ungoogled_chromium"
