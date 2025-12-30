@@ -59,7 +59,7 @@ package() {
     "$pkgdir/opt/${pkgname}/chrome-wrapper"
   # Install proper desktop file
   install -Dm644 "${srcdir}/${_archdir}/helium.desktop" \
-    "${pkgdir}/usr/share/applications/${_binaryname}.desktop"
+    "${pkgdir}/usr/share/applications/${_pkgname}.desktop"
   # Install icon for desktop file
   install -Dm644 "${pkgdir}/opt/${pkgname}/product_logo_256.png" \
     "${pkgdir}/usr/share/pixmaps/${_binaryname}.png"
