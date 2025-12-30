@@ -58,7 +58,7 @@ package() {
   sed -i 's/exists_desktop_file || generate_desktop_file/true/' \
     "$pkgdir/opt/${pkgname}/chrome-wrapper"
   # Install proper desktop file
-  install -Dm644 "${srcdir}/${_archdir}/${_pkgname}.desktop" \
+  install -Dm644 "${srcdir}/${_archdir}/helium.desktop" \
     "${pkgdir}/usr/share/applications/${_pkgname}.desktop"
   # Install icon for desktop file
   install -Dm644 "${pkgdir}/opt/${pkgname}/product_logo_256.png" \
