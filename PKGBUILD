@@ -62,9 +62,9 @@ package() {
     "${pkgdir}/usr/share/applications/${_pkgname}.desktop"
   # Install icon for desktop file
   install -Dm644 "${pkgdir}/opt/${pkgname}/product_logo_256.png" \
-    "${pkgdir}/usr/share/pixmaps/${_pkgname}.png"
+    "${pkgdir}/usr/share/pixmaps/${_binaryname}.png"
   install -Dm644 "${pkgdir}/opt/${pkgname}/product_logo_256.png" \
-    "${pkgdir}/usr/share/icons/hicolor/256x256/apps/${_pkgname}.png"
+    "${pkgdir}/usr/share/icons/hicolor/256x256/apps/${_binaryname}.png"
   # Install Ungoogled Chromium license
   install -Dm644 "${srcdir}/LICENSE.ungoogled_chromium" \
     "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE.ungoogled_chromium"
