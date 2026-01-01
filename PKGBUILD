@@ -28,14 +28,19 @@ optdepends=('pipewire: WebRTC desktop sharing under Wayland'
 source=('0001-update-wrapper-arch.patch'
         '0002-align-desktop-entry.patch')
 source_x86_64=("${_pkgname}-${pkgver}-x86_64_linux.tar.xz::https://github.com/imputnet/helium-linux/releases/download/${pkgver}/${_pkgname}-${pkgver}-x86_64_linux.tar.xz"
+               "${_pkgname}-${pkgver}-x86_64_linux.tar.xz.asc::https://github.com/imputnet/helium-linux/releases/download/${pkgver}/${_pkgname}-${pkgver}-x86_64_linux.tar.xz.asc"
                "LICENSE.ungoogled_chromium::https://raw.githubusercontent.com/imputnet/helium-linux/${pkgver}/LICENSE.ungoogled_chromium")
 source_aarch64=("${_pkgname}-${pkgver}-arm64_linux.tar.xz::https://github.com/imputnet/helium-linux/releases/download/${pkgver}/${_pkgname}-${pkgver}-arm64_linux.tar.xz"
+               "${_pkgname}-${pkgver}-arm64_linux.tar.xz.asc::https://github.com/imputnet/helium-linux/releases/download/${pkgver}/${_pkgname}-${pkgver}-arm64_linux.tar.xz.asc"
                 "LICENSE.ungoogled_chromium::https://raw.githubusercontent.com/imputnet/helium-linux/${pkgver}/LICENSE.ungoogled_chromium")
+validpgpkeys=('BE677C1989D35EAB2C5F26C9351601AD01D6378E')
 sha256sums=('3232eb325d4e6ec929d4050e7c44d2976acc82678b544ae459d2da0717b49538'
             '1e9777e8b03cbdba142c29b30b51004492d77043f1f1ccb12f7c1f302e97a7bf')
 sha256sums_x86_64=('3ecc163b030e0fe978ce91a2c9ab003dfcbcb4a50873c3ad18d0e560071cc027'
+                   'SKIP' # x86_64.tar.xz.asc
                    '9539b394e4179952698894bd62ef6566b6804ab0ff360dcf3a511cfaf7f78c4d')
 sha256sums_aarch64=('9a8074118c5050622c1a359e2c7fd732fa13a4f60b19da5db327d43259a5d7f5'
+                    'SKIP' # aarm64.tar.xz.asc
                     '9539b394e4179952698894bd62ef6566b6804ab0ff360dcf3a511cfaf7f78c4d')
 
 prepare() {
