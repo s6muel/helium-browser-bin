@@ -31,9 +31,9 @@ source_x86_64=("${_pkgname}-${pkgver}-x86_64_linux.tar.xz::https://github.com/im
                "${_pkgname}-${pkgver}-x86_64_linux.tar.xz.asc::https://github.com/imputnet/helium-linux/releases/download/${pkgver}/${_pkgname}-${pkgver}-x86_64_linux.tar.xz.asc"
                "LICENSE.ungoogled_chromium::https://raw.githubusercontent.com/imputnet/helium-linux/${pkgver}/LICENSE.ungoogled_chromium")
 source_aarch64=("${_pkgname}-${pkgver}-arm64_linux.tar.xz::https://github.com/imputnet/helium-linux/releases/download/${pkgver}/${_pkgname}-${pkgver}-arm64_linux.tar.xz"
-               "${_pkgname}-${pkgver}-arm64_linux.tar.xz.asc::https://github.com/imputnet/helium-linux/releases/download/${pkgver}/${_pkgname}-${pkgver}-arm64_linux.tar.xz.asc"
+                "${_pkgname}-${pkgver}-arm64_linux.tar.xz.asc::https://github.com/imputnet/helium-linux/releases/download/${pkgver}/${_pkgname}-${pkgver}-arm64_linux.tar.xz.asc"
                 "LICENSE.ungoogled_chromium::https://raw.githubusercontent.com/imputnet/helium-linux/${pkgver}/LICENSE.ungoogled_chromium")
-validpgpkeys=('BE677C1989D35EAB2C5F26C9351601AD01D6378E')
+validpgpkeys=('BE677C1989D35EAB2C5F26C9351601AD01D6378E') # Helium <helium@imput.net>
 sha256sums=('3232eb325d4e6ec929d4050e7c44d2976acc82678b544ae459d2da0717b49538'
             '1e9777e8b03cbdba142c29b30b51004492d77043f1f1ccb12f7c1f302e97a7bf')
 sha256sums_x86_64=('3ecc163b030e0fe978ce91a2c9ab003dfcbcb4a50873c3ad18d0e560071cc027'
