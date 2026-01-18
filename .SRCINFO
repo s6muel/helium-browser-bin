@@ -7,7 +7,7 @@
 #  * SPDX-License-Identifier: 0BSD
 #  */
 pkgbase = helium-browser-bin
-	pkgdesc = Private, fast, and honest web browser based on Chromium
+	pkgdesc = Private, fast, and honest web browser based on Chromium (Latest/Stable)
 	pkgver = 0.8.2.1
 	pkgrel = 1
 	url = https://github.com/imputnet/helium-linux
